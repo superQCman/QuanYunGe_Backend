@@ -28,7 +28,7 @@ app = Flask(__name__)
 api = Api(app, doc_root='/api-docs', ui_root='/swagger-ui')
 
 # 配置数据库
-app.config['DATABASE'] = '/root/Coin_Select.db'
+app.config['DATABASE'] = '/root/Backend/Coin_Select.db'
 # app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 例如，设置为 16 MB
 
 
@@ -526,7 +526,7 @@ class CoinRecognition(Resource):
         cropped_img_path = os.path.join(os.getcwd(), 'Recognition', 'cropped_image.jpg')
         imgsource = os.path.join(os.getcwd(), 'Recognition', 'rec_image.jpg')
         try:
-            cv2.imwrite(cropped_img_path, cropped_img)
+            cv2.imwrite(cropped_img_path, img)
             imgsource = cropped_img_path
         except Exception as e:
             print(e)
@@ -872,13 +872,17 @@ class CoinGeneration(Resource):
         inner = timelist[indexs][0]
         match inner:
             case 0:
+                coin1_id=1
                 timestamp = now.timestamp()
             case 1:
+                coin1_id=5
                 draw.ellipse(((300, 300), (1300, 1300)), fill=None, outline=line_gold, width=5)
             case 2:
+                coin1_id=6
                 draw.ellipse(((310, 310), (1290, 1290)), fill=None, outline=line_gold, width=5)
                 draw.ellipse(((300, 300), (1300, 1300)), fill=None, outline=line_gold, width=5)
             case 3:
+                coin1_id=10
                 for i in range(0, 360, 2):
                     x = 800 + 500 * math.sin(i * np.pi / 180)
                     y = 800 + 500 * math.cos(i * np.pi / 180)
@@ -888,6 +892,7 @@ class CoinGeneration(Resource):
                     y2 = y + 5
                     draw.ellipse(((x1, y1), (x2, y2)), fill=line_gold, width=1)
             case 4:
+                coin1_id=12
                 draw.ellipse(((310, 310), (1290, 1290)), fill=None, outline=line_gold, width=5)
                 for i in range(0, 360, 2):
                     x = 800 + 500 * math.sin(i * np.pi / 180)
@@ -898,6 +903,7 @@ class CoinGeneration(Resource):
                     y2 = y + 5
                     draw.ellipse(((x1, y1), (x2, y2)), fill=line_gold, width=1)
             case 5:
+                coin1_id=20
                 draw.ellipse(((310, 310), (1290, 1290)), fill=None, outline=line_gold, width=5)
                 coordinates = []
                 for i in range(0, 360, 2):
@@ -907,6 +913,7 @@ class CoinGeneration(Resource):
                         draw.line(((x, y), (coordinates[-1][0], coordinates[-1][1])), fill=line_gold, width=5)
                     coordinates.append((x, y))
             case 6:
+                coin1_id=22
                 for i in range(0, 360, 2):
                     x = 800 + 500 * math.sin(i * np.pi / 180)
                     y = 800 + 500 * math.cos(i * np.pi / 180)
@@ -916,6 +923,7 @@ class CoinGeneration(Resource):
                     y2 = y + 5
                     draw.ellipse(((x1, y1), (x2, y2)), fill=line_gold, width=1)
             case 7:
+                coin1_id=30
                 coordinates = []
                 for i in range(0, 360, 1):
                     x = 800 + 500 * math.sin(i * np.pi / 180)
@@ -927,6 +935,7 @@ class CoinGeneration(Resource):
         middle = timelist[indexs][1]
         match middle:
             case 0:
+                coin2_id=2
                 draw.ellipse(((100, 100), (1500, 1500)), fill=None, outline=line_gold, width=10)
             case 1:
                 coordinates = []
@@ -946,6 +955,7 @@ class CoinGeneration(Resource):
                 draw.line(((coordinates[0][0], coordinates[0][1]), (coordinates[-1][0], coordinates[-1][1])),
                           fill=line_gold, width=5)
             case 2:
+                coin2_id=15
                 coordinates = []
                 for i in range(0, 360, 2):
                     x = 800 + 700 * math.sin(i * np.pi / 180)
@@ -956,6 +966,7 @@ class CoinGeneration(Resource):
         outer = timelist[indexs][2]
         match outer:
             case 0:
+                coin3_id=3
                 draw.ellipse(((0, 0), (1600, 1600)), fill=None, outline=line_gold, width=20)
             case 1:
                 draw.ellipse(((0, 0), (1600, 1600)), fill=None, outline=line_gold, width=15)
@@ -968,6 +979,7 @@ class CoinGeneration(Resource):
                     y2 = y + 15
                     draw.ellipse(((x1, y1), (x2, y2)), fill=line_gold, width=3)
             case 2:
+                coin3_id=18
                 coordinates = []
                 for i in range(0, 360, 5):
                     x = 800 + 795 * math.sin(i * np.pi / 180)
@@ -976,6 +988,7 @@ class CoinGeneration(Resource):
                         draw.line(((x, y), (coordinates[-1][0], coordinates[-1][1])), fill=line_gold, width=15)
                     coordinates.append((x, y))
             case 3:
+                coin3_id=25
                 draw.ellipse(((0, 0), (1600, 1600)), fill=None, outline=line_gold, width=15)
                 coordinates = []
                 for i in range(0, 360, 3):
@@ -994,7 +1007,7 @@ class CoinGeneration(Resource):
         new_image.save(f'./own/{own_id}.png')  # Save the image
 
         db = get_db()
-        db.execute('INSERT INTO Own_coin (ID, own_id, title, own_photo,coin1_id,coin2_id,coin3_id) VALUES (?, ?, ?, ?, ?, ?, ?)', (id, own_id, text1, f'/own/{own_id}.png',1,2,3))
+        db.execute('INSERT INTO Own_coin (ID, own_id, title, own_photo,coin1_id,coin2_id,coin3_id) VALUES (?, ?, ?, ?, ?, ?, ?)', (id, own_id, text1, f'/own/{own_id}.png',coin1_id,coin2_id,coin3_id))
         db.commit()
         db.close()
         return jsonify({"own_id": own_id})
