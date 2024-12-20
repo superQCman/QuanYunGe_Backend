@@ -933,6 +933,7 @@ class CoinGeneration(Resource):
                     coordinates.append((x, y))
         draw.ellipse(((0, 0), (1600, 1600)), fill=None, outline=('#BB9B81'), width=100)
         middle = timelist[indexs][1]
+        coin2_id=0
         match middle:
             case 0:
                 coin2_id=2
@@ -964,6 +965,7 @@ class CoinGeneration(Resource):
                         draw.line(((x, y), (coordinates[-1][0], coordinates[-1][1])), fill=line_gold, width=10)
                     coordinates.append((x, y))
         outer = timelist[indexs][2]
+        coin3_id=3
         match outer:
             case 0:
                 coin3_id=3
