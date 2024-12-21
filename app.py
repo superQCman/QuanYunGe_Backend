@@ -337,8 +337,11 @@ class FavoriteCoinResource(Resource):
 
     def post(self, id, coin_id):
         db = get_db()
-        db.execute('INSERT INTO Favorite (ID, coin_id) VALUES (?, ?)', (id, coin_id))
-        db.commit()
+        # Check if the favorite already exists
+        existing = db.execute('SELECT 1 FROM Favorite WHERE ID=? AND coin_id=?', (id, coin_id)).fetchone()
+        if not existing:
+            db.execute('INSERT INTO Favorite (ID, coin_id) VALUES (?, ?)', (id, coin_id))
+            db.commit()
         db.close()
         return jsonify({"save": 1})
 
@@ -870,6 +873,7 @@ class CoinGeneration(Resource):
 
         indexs = int(timestamp) % len(timelist)
         inner = timelist[indexs][0]
+        coin1_id = 1
         match inner:
             case 0:
                 coin1_id=1
@@ -933,7 +937,7 @@ class CoinGeneration(Resource):
                     coordinates.append((x, y))
         draw.ellipse(((0, 0), (1600, 1600)), fill=None, outline=('#BB9B81'), width=100)
         middle = timelist[indexs][1]
-        coin2_id=0
+        coin2_id=2
         match middle:
             case 0:
                 coin2_id=2
